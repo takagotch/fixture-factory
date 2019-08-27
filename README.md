@@ -60,6 +60,14 @@ public class MyCustomProcessor implements Processor {
 
 Fixture.from(SomeClass.class).uses(new MyCustomProcessor()).gimme("someTemplate");
 
+Fixture.from(Client.class).uses(new HibernateProcessor(session)).gimme("valid");
+
+Fixture.of(Order.class).addTemplate("valid", new Rule() {{
+  add();
+  add();
+  add(":");
+}});
+
 
 ```
 
