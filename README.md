@@ -63,12 +63,45 @@ Fixture.from(SomeClass.class).uses(new MyCustomProcessor()).gimme("someTemplate"
 Fixture.from(Client.class).uses(new HibernateProcessor(session)).gimme("valid");
 
 Fixture.of(Order.class).addTemplate("valid", new Rule() {{
-  add();
-  add();
-  add(":");
+  add("id", random(Long.class, range(1L, 200L)));
+  add("items", has(3).of(Item.class, "valid", "invalid", "external"));
+  add("payment", one(Payment.class, "valid"));
 }});
 
+Fixture.of(Item.class).addTemplate("valid", new Rule() {{
+  add("productId", random(Integer.class, range(1L, 200L)));
+}});
 
+Fixture.of(Payment.class).addTemplate("valid", new Rule() {{
+  add("id", random(Long.class, range(1L, 200L)));
+}});
+
+Fixture.of(Any.class).addTEmplate("valid", new Rule() {{
+  add("id", regex("\\d{3,5}"));
+  add("phoneNumber", regex("(\\d{2}-(\\d{4}-(\\d{4})"))));
+}});
+
+Fixture.of(Any.class).addTemplate("valid", new Rule() {{
+  add("dueDate", beforeDate("2011-04-15", new SimpleDateFormat("yyyy-MM-dd")));
+  add("payDate", afterDate("2011-04-15", new SimpleDateFormat("yyyy-MM-dd")));
+  add("birthday", randomDate("2011-04-15", "2011-11-07", new SimpleDateFormat("yyyy-MM-dd")));
+  add("cutDate", instant("now"));
+}});
+
+Fixture.of(Any.class).addTemplate("valid", new Rule() {{
+  add("firstName", firstName());
+  add("lastName", lastName());
+}});
+
+Fixture.of(Any.class).addTemplate("valid", new Rule() {{
+  add("country", "Brazil");
+  add("stete", uniqueRandom("Sao Paulo", "Rio de Janeiro", "Minas Gerais", "Bahia"));
+}});
+
+Fixture.of(User.class).addTemplate("valid", ne Rule() {{
+  add("cnpj", cnpj());
+  add("cnpj", cnpj(true));
+}});
 ```
 
 ```
